@@ -1,3 +1,3 @@
-require("options")
-require("plugins")
+require("eric.core")
+require("eric.lazy")
 

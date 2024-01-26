@@ -35,6 +35,11 @@ my_h="[\[\e[00;37m\]${HOSTNAME%%.*}\[\e[01;37m\]]"
 my_w="$\[\e[01;31m\]\w\[\e[01;37m\]"
 my_n="$\[\e[01;31m\]\n\[\e[01;37m\]"
 export PS1="\[\e[01;37m\]┌─${my_t}──${my_u}──${my_h}:${my_w}${my_n}└──\[\e[01;37m\]>>\[\e[0m\]"
+
+
+
+
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/eric/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
