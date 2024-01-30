@@ -42,14 +42,14 @@ export PS1="\[\e[01;37m\]┌─${my_t}──${my_u}──${my_h}:${my_w}${my_n}�
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/eric/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/eric/mambaforge/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/eric/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/eric/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/eric/mambaforge/etc/profile.d/conda.sh" ]; then
+        . "/home/eric/mambaforge/etc/profile.d/conda.sh"
     else
-        export PATH="/home/eric/miniconda3/bin:$PATH"
+        export PATH="/home/eric/mambaforge/bin:$PATH"
     fi
 fi
 unset __conda_setup

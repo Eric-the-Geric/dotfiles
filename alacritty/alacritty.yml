@@ -1,5 +1,5 @@
 window:
-  opacity: 0.5
+  opacity: 0.8
   padding:
     x: 0
     y: 0
@@ -13,14 +13,14 @@ tabspaces: 4
 
 font:
   normal:
-    family: Hack
-    style: Regular
+    family: Hack nerd font
+    style: Normal
 
   bold:
-    family: Hack
+    family: Hack nerd font
     style: Bold
   italic:
-    family: Hack
+    family: Hack nerd font
     style: Italic
 
   size: 13.0
