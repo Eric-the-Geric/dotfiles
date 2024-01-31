@@ -25,4 +25,4 @@ vim.cmd([[
 :set tgc
 ]])
 
-keymap("n", "<leader>pv", ":E<CR>", opts)
+keymap("n", "<leader>pv", ":Explore<CR>", opts)
