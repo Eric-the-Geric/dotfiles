@@ -196,15 +196,15 @@ bindsym $mod+b exec firefox
 bindsym $mod+f exec thunar
 
 #>>>>>colours>>>>>
-set $bg #260935
-set $gray #0e1849
-set $darkgray #1c7ed9
-set $red #7778b9
-set $green #a661a2
-set $yellow #9e90c5
-set $blue #d3bed1
-set $purple #cfe1e1
-set $aqua #ffe1f7
+set $bg #1f326d
+set $gray #396478
+set $darkgray #784862
+set $red #476199
+set $green #445cb8
+set $yellow #a2506a
+set $blue #456acf
+set $purple #b487b2
+set $aqua #a6effe
 #<<<<<colours<<<<<
 
 # Start i3bar to display a workspace bar (plus the system information i3status

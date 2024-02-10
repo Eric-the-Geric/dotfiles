@@ -1,4 +1,5 @@
 #!/bin/bash
+#TODO
 rm -rf ~/.bashrc 
 rm -rf ~/.config/nvim
 rm -rf ~/.config/i3
