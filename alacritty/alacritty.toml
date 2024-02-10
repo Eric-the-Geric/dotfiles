@@ -18,9 +18,9 @@ blue = "0x7fb4ca"
 cyan = "0x7aa89f"
 green = "0x98bb6c"
 magenta = "0x938aa9"
-red = "0xe82424"
+red = "0xe82424" #directory color
 white = "0xdcd7ba"
-yellow = "0xe6c384"
+yellow = "0xe6c384" # time colour
 
 [colors.normal]
 black = "0x090618"
@@ -29,7 +29,7 @@ cyan = "0x6a9589"
 green = "0x76946a"
 magenta = "0x957fb8"
 red = "0xc34043"
-white = "0xc8c093"
+white = "0xc8c093" #hostname colour
 yellow = "0xc0a36e"
 
 [colors.primary]
@@ -44,7 +44,7 @@ foreground = "0xc8c093"
 size = 13.0
 
 [font.bold]
-family = "Hack"
+family = "HackNerdFont"
 style = "Bold"
 
 [font.glyph_offset]
@@ -52,12 +52,12 @@ x = 0
 y = 0
 
 [font.italic]
-family = "Hack"
+family = "HackNerdFont"
 style = "Italic"
 
 [font.normal]
-family = "Hack"
-style = "Regular"
+family = "HackNerdFont"
+style = "Normal"
 
 
 [scrolling]
@@ -65,7 +65,7 @@ history = 10000
 multiplier = 3
 
 [window]
-opacity = 0.8
+opacity = 0.65
 
 [window.padding]
 x = 0

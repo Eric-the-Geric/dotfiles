@@ -48,10 +48,6 @@ floating_modifier $mod
 # or left-clicking anywhere into the window while holding the floating modifier.
 #tiling_drag modifier titlebar
 
-# i3 gaps
-for_window [class="^.*"] border pixel 2 
-gaps inner 15 
-gaps outer 10
 # start a terminal
 bindsym $mod+t exec i3-sensible-terminal
 
@@ -59,8 +55,7 @@ bindsym $mod+t exec i3-sensible-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-#bindsym $mod+d exec "dmenu_run -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -fn 'monospace-10' -p 'dmenu%'"
-bindsym $mod+d exec rofi -show drun
+bindsym $mod+d exec "dmenu_run -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -fn 'monospace-10' -p 'dmenu%'"
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
 # There also is i3-dmenu-desktop which only displays applications shipping a
@@ -68,10 +63,10 @@ bindsym $mod+d exec rofi -show drun
 # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
 
 # change focus
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -80,10 +75,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+h move left
-bindsym $mod+Shift+j move down
-bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -92,7 +87,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+semicolon split h
+bindsym $mod+h split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -196,15 +191,15 @@ bindsym $mod+b exec firefox
 bindsym $mod+f exec thunar
 
 #>>>>>colours>>>>>
-set $bg #260935
-set $gray #0e1849
-set $darkgray #1c7ed9
-set $red #7778b9
-set $green #a661a2
-set $yellow #9e90c5
-set $blue #d3bed1
-set $purple #cfe1e1
-set $aqua #ffe1f7
+set $bg #594061
+set $gray #77395c
+set $darkgray #6b3a6b
+set $red #226fa0
+set $green #7778b9
+set $yellow #eac34d
+set $blue #bda6c2
+set $purple #eca0af
+set $aqua #d3bed1
 #<<<<<colours<<<<<
 
 # Start i3bar to display a workspace bar (plus the system information i3status
@@ -212,7 +207,10 @@ set $aqua #ffe1f7
 
 bar {
 
-	status_command SCRIPT_DIR=~/.config/i3blocks/scripts i3blocks
+	status_command /usr/bin/bumblebee-status \
+		-m time ping nic battery cpu memory pasink pasource disk \
+		-p time.format="%H:%M" nic.states=^down nic.format={ssid}{strength} disk.format={used} memory.format={percent:05.02f}% ping.address=riot.de \
+		-t gruvbox-powerline \
 
 	colors {
         # bar background color
@@ -221,20 +219,27 @@ bar {
         statusline $yellow
         # workspaces section            
         #                    border  backgr. text
-        focused_workspace    $bg $bg $yellow
-        inactive_workspace   $bg $bg $gray
-        active_workspace     $bg $bg $yellow
-        urgent_workspace     $red $red $aqua
+        focused_workspace    $aqua $aqua $darkgray
+        inactive_workspace   $darkgray $darkgray $yellow
+        active_workspace     $darkgray $darkgray $yellow
+        urgent_workspace     $red $red $bg
 	    }
-	tray_output primary
 }
 
-# green gruvbox
-# class                |border    |backgr   |text     |indicator  |child_border
-client.focused          $bg        $bg       $yellow   $bg         $green
-client.focused_inactive $darkgray  $darkgray $white    $green      $green
-client.unfocused        $darkgray  $darkgray $white    $green      $green
-client.urgent           $red       $red      $white    $red        $red
 
-exec_always --no-startup-id picom -b -f --corner-radius 10 -D 3 --backend glx --blur-background
-exec --no-startup-id ~/bin/startup_xrandr.sh
+# green gruvbox
+# class                 border|backgr|text|indicator|child_border
+client.focused          $bg $bg $yellow $purple $darkgray
+client.focused_inactive $darkgray $darkgray $white $white $darkgray
+client.unfocused        $darkgray $darkgray $white $white $darkgray
+client.urgent           $red $red $white $red $red
+
+# configuring the workspaces
+#		border		background		text		indicator
+#client.focus 
+
+exec_always --no-startup-id mons -S 2,5:R --primary DP-2
+exec_always --no-startup-id nitrogen --restore
+exec_always --no-startup-id picom -b -f --corner-radius 14 -D 3 --backend glx --blur-background
+exec firefox
+exec alacritty

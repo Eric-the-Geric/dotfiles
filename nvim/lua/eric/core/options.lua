@@ -8,6 +8,7 @@ vim.g.mapleader = " "
 vim.cmd([[
 :set number
 :set relativenumber
+:set clipboard=unnamedplus
 :set autoindent
 :set tabstop=4
 :set shiftwidth=4
