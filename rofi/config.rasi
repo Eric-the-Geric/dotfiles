@@ -1,1 +1,74 @@
-@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
+element {
+  background: transparent;
+  children: [ element-icon, element-text ];
+}
+element,element-text,element-icon, button {
+    cursor: pointer;
+}
+
+inputbar {
+  margin: 0px 10px;
+  spacing: 0.4em;
+  border-radius: 				 6px;
+
+  border:        1px;
+  border-bottom: 3px;
+  background-color: #00000055;
+  border-color:		#ffffff20;
+  children: [entry,overlay,case-indicator];
+}
+
+
+
+listview, message {
+  padding: 0.5em;
+  border:  1px;
+  border-radius: 0px;
+  border-color: #00000020;
+  background-color: transparent;
+
+  columns: 3;
+  lines:   7;
+}
+listview {
+  border: 0px;
+  spacing: 10px;
+  background-color: transparent;
+  border-color:     #fff00020;
+  scrollbar:    false;
+}
+
+
+element {
+    border:  1px;
+    border-radius: 3px;
+    padding: 5px;
+    border-color: #00000020;
+}
+
+element-text {
+    background-color: transparent;
+    text-color:       #000000cc;
+    font: "Fira Code Nerd Font 13";
+}
+
+element normal.normal {
+    background-color: #00000055;
+}
+element.alternate.normal {
+    background-color: #00000055;
+}
+
+element.selected.normal {
+    background-color: #ff000000;
+}
+
+
+entry {
+    placeholder: "Search here";
+    placeholder-color: #00000020;
+    border-color: transparent;
+    background-color: transparent;
+    border:        10px;
+    text-color: #ffffffcc;
+}
