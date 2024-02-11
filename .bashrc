@@ -24,7 +24,6 @@ my_u="[\[\e[1;34m\u\e[01;37m\]]"
 my_h="[\[\e[00;37m\]${HOSTNAME%%.*}\[\e[01;37m\]]"
 my_w="$\[\e[01;31m\]\w\[\e[01;37m\]"
 my_n="$\[\e[01;31m\]\n\[\e[01;37m\]"
-#echo "${blk}, ${red}, ${grn}, ${ylw}, ${blu}, ${cyn}, ${pur}"
 #export PS1="\[\e[01;37m\]┌─${my_t}──${my_u}──${my_h}:${my_w}${my_n}└──\[\e[01;37m\]>>\[\e[0m\]"
 export PS1="${blu}┌─${wht}${my_t}──${my_u}──${my_h}:${my_w}${my_n}${blu}└──${blu}>>\[\e[0m\]"
 
@@ -32,7 +31,6 @@ export PS1="${blu}┌─${wht}${my_t}──${my_u}──${my_h}:${my_w}${my_n}${
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/eric/mambaforge/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
-val 
     eval "$__conda_setup"
 else
     if [ -f "/home/eric/mambaforge/etc/profile.d/conda.sh" ]; then
