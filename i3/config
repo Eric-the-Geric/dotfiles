@@ -49,9 +49,9 @@ floating_modifier $mod
 #tiling_drag modifier titlebar
 
 # i3 gaps
-for_window [class="^.*"] border pixel 2 
+for_window [class="^.*"] border pixel 2
 gaps inner 15 
-gaps outer 10
+gaps outer 20
 # start a terminal
 bindsym $mod+t exec i3-sensible-terminal
 
@@ -195,39 +195,40 @@ bindsym $mod+r mode "resize"
 bindsym $mod+b exec firefox
 bindsym $mod+f exec thunar
 
+#include ~/.config/i3/colours.conf
 #>>>>>colours>>>>>
-set $bg #1f326d
-set $gray #396478
-set $darkgray #784862
-set $red #476199
-set $green #445cb8
-set $yellow #a2506a
-set $blue #456acf
-set $purple #b487b2
-set $aqua #a6effe
+set $bg #040c19
+set $gray #280b21
+set $darkgray #0d5f2e
+set $red #264a62
+set $green #b55e88
+set $yellow #fb7e62
+set $blue #f18771
+set $purple #f3b25e
+set $aqua #b1e38e
 #<<<<<colours<<<<<
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 
-bar {
-
-	status_command SCRIPT_DIR=~/.config/i3blocks/scripts i3blocks
-
-	colors {
-        # bar background color
-		background $bg
-        # text color used for blocks that do not have a color specified.
-        statusline $yellow
-        # workspaces section            
-        #                    border  backgr. text
-        focused_workspace    $bg $bg $yellow
-        inactive_workspace   $bg $bg $gray
-        active_workspace     $bg $bg $yellow
-        urgent_workspace     $red $red $aqua
-	    }
-	tray_output primary
-}
+#bar {
+#
+#	status_command SCRIPT_DIR=~/.config/i3blocks/scripts i3blocks
+#
+#	colors {
+#        # bar background color
+#		background $bg
+#        # text color used for blocks that do not have a color specified.
+#        statusline $yellow
+#        # workspaces section            
+#        #                    border  backgr. text
+#        focused_workspace    $bg $bg $yellow
+#        inactive_workspace   $bg $bg $gray
+#        active_workspace     $bg $bg $yellow
+#        urgent_workspace     $red $red $aqua
+#	    }
+#	tray_output primary
+#}
 
 # green gruvbox
 # class                |border    |backgr   |text     |indicator  |child_border
@@ -236,5 +237,6 @@ client.focused_inactive $darkgray  $darkgray $white    $green      $green
 client.unfocused        $darkgray  $darkgray $white    $green      $green
 client.urgent           $red       $red      $white    $red        $red
 
-exec_always --no-startup-id picom -b -f --corner-radius 10 -D 3 --backend glx --blur-background
+exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id picom -b -f --corner-radius 20 -D 3 --backend glx --blur-background
 exec --no-startup-id ~/bin/startup_xrandr.sh
