@@ -1,0 +1,33 @@
+#!/bin/bash
+
+## References ##
+# https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer
+################
+
+if [[ $# -eq 1 ]]; then
+	session=$1
+else
+	session=$(find ~/code/ ~/Documents/work/projects/ -maxdepth 1 -type d | fzf)
+fi
+if [[ -z $session ]]; then
+	exit 0
+fi
+session_name=$(basename $session )
+if [ ! -d "$session/.venv" ]; then
+	echo "Environment"
+	mkdir $session/.venv/
+	python -m venv $session/.venv
+fi
+
+tmux has-session -t "$session_name" 2>/dev/null
+if [ $? != 0 ]; then
+	echo "Creating new session: '$session_name'"
+
+	tmux new -c $session -d -s "$session_name"
+	tmux send-keys -t "$session_name:0" "source $session/.venv/bin/activate" C-m
+	tmux send-keys -t "$session_name:0" "clear" C-m
+else
+	echo "session '$session_name' already exists. attaching..."
+fi
+
+tmux attach-session -t "$session_name"
