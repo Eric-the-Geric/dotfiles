@@ -1,5 +1,5 @@
 #!/bin/bash
-#TODO
+#TODO - The script doesn't actually work yet was just testing for now
 rm -rf ~/.bashrc 
 rm -rf ~/.config/nvim
 rm -rf ~/.config/i3

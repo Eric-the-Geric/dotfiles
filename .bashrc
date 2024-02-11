@@ -24,6 +24,7 @@ my_u="[\[\e[1;34m\u\e[01;37m\]]"
 my_h="[\[\e[00;37m\]${HOSTNAME%%.*}\[\e[01;37m\]]"
 my_w="$\[\e[01;31m\]\w\[\e[01;37m\]"
 my_n="$\[\e[01;31m\]\n\[\e[01;37m\]"
+#echo "${blk}, ${red}, ${grn}, ${ylw}, ${blu}, ${cyn}, ${pur}"
 #export PS1="\[\e[01;37m\]┌─${my_t}──${my_u}──${my_h}:${my_w}${my_n}└──\[\e[01;37m\]>>\[\e[0m\]"
 export PS1="${blu}┌─${wht}${my_t}──${my_u}──${my_h}:${my_w}${my_n}${blu}└──${blu}>>\[\e[0m\]"
 
@@ -44,7 +45,7 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="$PYENV_ROOT/bin:$HOME/bin/:$PATH"
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 
 
