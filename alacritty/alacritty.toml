@@ -1,4 +1,8 @@
 #cursor_style = "Block"
+import = [
+"~/.config/alacritty/colourme.toml",
+]
+
 live_config_reload = true
 
 [colors]
@@ -12,15 +16,15 @@ index = 16
 color = "0xff5d62"
 index = 17
 
-[colors.bright]
-black = "0x727169"
-blue = "0x7fb4ca"
-cyan = "0x7aa89f"
-green = "0x98bb6c"
-magenta = "0x938aa9"
-red = "0xe82424" #directory color
-white = "0xdcd7ba"
-yellow = "0xe6c384" # time colour
+#[colors.bright]
+#black = "0x727169"
+#blue = "0x7fb4ca"
+#cyan = "0x7aa89f"# arch text colour (I guess bold)
+#green = "0x98bb6c"
+#magenta = "0x938aa9"
+#red = "0xe82424" #directory color
+#white = "0xdcd7ba"
+#yellow = "0xe6c384" # time colour
 
 [colors.normal]
 black = "0x090618"
@@ -65,7 +69,7 @@ history = 10000
 multiplier = 3
 
 [window]
-opacity = 0.65
+opacity = 0.70
 
 [window.padding]
 x = 0
