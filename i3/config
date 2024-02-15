@@ -246,5 +246,5 @@ client.unfocused        $darkgray  $darkgray $white    $green      $green
 client.urgent           $red       $red      $white    $red        $red
 
 exec_always --no-startup-id ~/.config/polybar/launch.sh
-exec_always --no-startup-id picom -b -f --corner-radius 20 -D 3 --backend glx --blur-background
+exec_always --no-startup-id picom -b -f -D 3 --backend glx --blur-background
 exec --no-startup-id ~/bin/startup_xrandr.sh
