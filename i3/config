@@ -23,6 +23,14 @@ font pango:HackNerdFont 12
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
 
+# Screenshots
+bindsym $mod+Print exec --no-startup-id maim "/home/$USER/Pictures/$(date)"
+bindsym Print exec --no-startup-id maim -B --select "/home/$USER/Pictures/$(date)"
+
+## Clipboard Screenshots
+bindsym Ctrl+Shift+Print exec --no-startup-id maim | xclip -selection clipboard -t image/png
+bindsym Ctrl+Print exec --no-startup-id maim -B --select | xclip -selection clipboard -t image/png
+
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
@@ -197,15 +205,15 @@ bindsym $mod+f exec thunar
 
 #include ~/.config/i3/colours.conf
 #>>>>>colours>>>>>
-set $bg #030101
-set $gray #190a0d
-set $darkgray #39131e
-set $red #681f31
-set $yellow #b11b33
-set $purple #cd416a
-set $blue #eb72a0
-set $green #f5afd3
-set $aqua #fcf1f7
+set $bg #010000
+set $gray #240202
+set $darkgray #4b0808
+set $red #7d0405
+set $yellow #b20606
+set $purple #742f29
+set $blue #a95f5a
+set $green #ddaba0
+set $aqua #faf0e8
 #<<<<<colours<<<<<
 
 # Start i3bar to display a workspace bar (plus the system information i3status
