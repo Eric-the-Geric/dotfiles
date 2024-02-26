@@ -1,5 +1,6 @@
 #!/bin/bash
 # create the virtual environment in your home directory
+# found the answer here: https://bbs.archlinux.org/viewtopic.php?id=277082
 python -m venv =$HOME/$USR/openconnect-sso
 
 # activate the environment
