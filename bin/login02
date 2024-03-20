@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+ssh geci@login02.hpc.zhaw.ch
