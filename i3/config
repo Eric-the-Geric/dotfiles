@@ -242,3 +242,4 @@ client.urgent           $red       $red      $white    $red        $red
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec_always --no-startup-id picom -b -f -D 3 --backend glx --blur-background
 exec --no-startup-id ~/bin/startup_xrandr.sh
+exec --no-startup-id xset s off && xset -dpms
