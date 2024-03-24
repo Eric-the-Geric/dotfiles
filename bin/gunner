@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#set $(xwininfo -id $(xdotool getactivewindow) \
+#|sed -n -e "s/^ \+Width: \([0-9]\+\).*/\1/p" \
+#        -e "s/^ \+Height: \([0-9]\+\).*/\1/p")
+cols=$(tput cols)
+rows=$(tput lines)
+source ~/Documents/personal_projects/terminal_gol/.venv/bin/activate
+echo -n "$cols $rows"
+python ~/Documents/personal_projects/terminal_gol/main.py --width $cols --height $rows --symbol '+'
+deactivate

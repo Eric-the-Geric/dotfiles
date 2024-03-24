@@ -24,13 +24,7 @@ font pango:HackNerdFont 12
 exec --no-startup-id dex --autostart --environment i3
 
 # Screenshots
-bindsym $mod+Print exec --no-startup-id maim "/home/$USER/Pictures/$(date)"
-bindsym Print exec --no-startup-id maim -B --select "/home/$USER/Pictures/$(date)"
-
-## Clipboard Screenshots
-bindsym Ctrl+Shift+Print exec --no-startup-id maim | xclip -selection clipboard -t image/png
-bindsym Ctrl+Print exec --no-startup-id maim -B --select | xclip -selection clipboard -t image/png
-
+bindsym $mod+Shift+s exec --no-startup-id flameshot launcher
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
@@ -205,15 +199,15 @@ bindsym $mod+f exec thunar
 
 #include ~/.config/i3/colours.conf
 #>>>>>colours>>>>>
-set $bg #010000
-set $gray #240202
-set $darkgray #4b0808
-set $red #7d0405
-set $yellow #b20606
-set $purple #742f29
-set $blue #a95f5a
-set $green #ddaba0
-set $aqua #faf0e8
+set $blue #021936
+set $gray #0e3658
+set $darkgray #315471
+set $purple #135d89
+set $red #3181a7
+set $yellow #669bb3
+set $green #47c1e0
+set $bg #8be6f2
+set $aqua #ecfefd
 #<<<<<colours<<<<<
 
 # Start i3bar to display a workspace bar (plus the system information i3status
