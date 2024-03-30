@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-
+# reference:
+# https://superuser.com/questions/611538/is-there-a-way-to-display-a-countdown-or-stopwatch-timer-in-a-terminal
 seconds=$1
 start="$(($(date +%s) + $seconds))"
 while [ "$start" -ge `date +%s` ]; do
