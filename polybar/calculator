@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Small arithmetic prompt for the Polybar calculator button."""
+
+import ast
+import math
+import operator
+import subprocess
+
+
+OPERATORS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.FloorDiv: operator.floordiv,
+    ast.Mod: operator.mod,
+    ast.Pow: operator.pow,
+}
+SIGNS = {ast.UAdd: operator.pos, ast.USub: operator.neg}
+
+
+def calculate(node):
+    if isinstance(node, ast.Constant) and type(node.value) in (int, float):
+        result = node.value
+    elif isinstance(node, ast.UnaryOp) and type(node.op) in SIGNS:
+        result = SIGNS[type(node.op)](calculate(node.operand))
+    elif isinstance(node, ast.BinOp) and type(node.op) in OPERATORS:
+        left = calculate(node.left)
+        right = calculate(node.right)
+        if isinstance(node.op, ast.Pow) and abs(right) > 12:
+            raise ValueError("Exponent is too large")
+        result = OPERATORS[type(node.op)](left, right)
+    else:
+        raise ValueError("Use numbers and + - * / // % ** with parentheses")
+
+    if not math.isfinite(result) or abs(result) > 1e12:
+        raise ValueError("Result is too large")
+    return result
+
+
+def main():
+    prompt = subprocess.run(
+        ["rofi", "-dmenu", "-p", "Calculate"],
+        input="",
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    expression = prompt.stdout.strip()
+    if prompt.returncode != 0 or not expression:
+        return
+
+    try:
+        if len(expression) > 80:
+            raise ValueError("Expression is too long")
+        result = calculate(ast.parse(expression, mode="eval").body)
+    except (SyntaxError, ValueError, ZeroDivisionError, OverflowError, TypeError) as error:
+        subprocess.run(["rofi", "-e", str(error)], check=False)
+        return
+
+    answer = f"{result:.12g}"
+    selected = subprocess.run(
+        ["rofi", "-dmenu", "-p", "Enter to copy", "-no-custom"],
+        input=f"{answer}\n",
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if selected.returncode == 0:
+        subprocess.run(
+            ["xclip", "-selection", "clipboard"],
+            input=answer,
+            text=True,
+            check=False,
+        )
+
+
+if __name__ == "__main__":
+    main()
