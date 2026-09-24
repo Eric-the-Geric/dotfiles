@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-. ~/openconnect-sso/bin/activate
 export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox" # see https://github.com/vlaci/openconnect-sso/issues/69
-openconnect-sso -s ras.zhaw.ch
+sudo openconnect --authenticate ras.zhaw.ch
+

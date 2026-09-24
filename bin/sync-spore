@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Two-way SPORE sync. For each file, the newer modification time wins.
+# Usage: ./sync-spore.sh [--dry-run]
+
+set -euo pipefail
+
+LOCAL_DIR="/home/eric/Documents/work/SPORE"
+REMOTE="eric@192.168.1.147"
+REMOTE_DIR="/home/eric/Documents/work/SPORE"
+SSH_COMMAND="ssh -i /home/eric/.ssh/lan"
+
+RSYNC_OPTIONS=(--archive --update --human-readable --info=progress2)
+if [[ "${1:-}" == "--dry-run" ]]; then
+  RSYNC_OPTIONS+=(--dry-run)
+elif [[ $# -ne 0 ]]; then
+  echo "Usage: $0 [--dry-run]" >&2
+  exit 2
+fi
+
+local_exists=false
+remote_exists=false
+[[ -d "$LOCAL_DIR" ]] && local_exists=true
+if $SSH_COMMAND "$REMOTE" "test -d '$REMOTE_DIR'"; then
+  remote_exists=true
+fi
+
+if ! $local_exists && ! $remote_exists; then
+  echo "SPORE does not exist on either device; refusing to create an empty sync." >&2
+  exit 1
+fi
+
+if ! $local_exists; then
+  mkdir -p "$LOCAL_DIR"
+fi
+
+echo "Syncing this device -> laptop"
+rsync "${RSYNC_OPTIONS[@]}" -e "$SSH_COMMAND" \
+  "$LOCAL_DIR/" "$REMOTE:$REMOTE_DIR/"
+
+echo "Syncing laptop -> this device"
+rsync "${RSYNC_OPTIONS[@]}" -e "$SSH_COMMAND" \
+  "$REMOTE:$REMOTE_DIR/" "$LOCAL_DIR/"

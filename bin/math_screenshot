@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+source ~/Documents/personal_projects/screenshot/.venv/bin/activate
+python ~/Documents/personal_projects/screenshot/clix11.py
+deactivate

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source ~/openconnect-sso/.venv/bin/activate
+openconnect-sso
+

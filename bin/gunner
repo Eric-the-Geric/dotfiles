@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-#set $(xwininfo -id $(xdotool getactivewindow) \
-#|sed -n -e "s/^ \+Width: \([0-9]\+\).*/\1/p" \
-#        -e "s/^ \+Height: \([0-9]\+\).*/\1/p")
-cols=$(tput cols)
-rows=$(tput lines)
-source ~/Documents/personal_projects/terminal_gol/.venv/bin/activate
-echo -n "$cols $rows"
-python ~/Documents/personal_projects/terminal_gol/main.py --width $cols --height $rows --symbol '+'
-deactivate
+
+set -euo pipefail
+
+project_dir="${TERMINAL_GOL_DIR:-$HOME/Documents/personal_projects/terminal_gol}"
+python_bin="$project_dir/.venv/bin/python"
+
+if [[ ! -x "$python_bin" ]]; then
+    python_bin="$(command -v python3)"
+fi
+
+exec "$python_bin" "$project_dir/main.py" "$@"

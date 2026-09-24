@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+HOST="login02.hpc.zhaw.ch"
+USER="geci"
+
+ssh "$USER@$HOST"

@@ -10,7 +10,7 @@ return {
   },
   config = function()
     -- import lspconfig plugin
-    local lspconfig = require("lspconfig")
+    --local lspconfig = require("lspconfig")
 
     -- import cmp-nvim-lsp plugin
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
@@ -74,13 +74,29 @@ return {
     end
 
     -- configure python server
-    lspconfig["pyright"].setup({
+    vim.lsp.config("pyright",
+	{
       capabilities = capabilities,
       on_attach = on_attach,
     })
+	vim.lsp.config("texlab",
+	{
+	  capabilities = capabilities,
+	  on_attach = on_attach,
+	})
+	vim.lsp.enable("texlab")
+	vim.lsp.enable("pyright")
+    -- configure python server
+    vim.lsp.config("tinymist",
+	{
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+	vim.lsp.enable("tinymist")
 
     -- configure lua server (with special settings)
-    lspconfig["lua_ls"].setup({
+    vim.lsp.config("lua_ls",
+	{
       capabilities = capabilities,
       on_attach = on_attach,
       settings = { -- custom settings for lua
@@ -99,20 +115,23 @@ return {
         },
       },
     })
-	lspconfig['clangd'].setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
-		filetypes = { "h", "c", "cpp", "cc", "objc", "objcpp"},
-		cmd = {"clangd", "--background-index"},
-		single_file_support = true,
-		root_dir = lspconfig.util.root_pattern(
-			  '.clangd',
-			  '.clang-tidy',
-			  '.clang-format',
-			  'compile_commands.json',
-			  'compile_flags.txt',
-			  'configure.ac',
-			  '.git'
-		  )})
+	vim.lsp.enable("lua_ls")
+
+	---- configure clangd
+	--lspconfig['clangd'].setup({
+	--	capabilities = capabilities,
+	--	on_attach = on_attach,
+	--	filetypes = { "h", "c", "cpp", "cc", "objc", "objcpp"},
+	--	cmd = {"clangd", "--background-index"},
+	--	single_file_support = true,
+	--	root_dir = lspconfig.util.root_pattern(
+	--		  '.clangd',
+	--		  '.clang-tidy',
+	--		  '.clang-format',
+	--		  'compile_commands.json',
+	--		  'compile_flags.txt',
+	--		  'configure.ac',
+	--		  '.git'
+	--	  )})
   end,
 }

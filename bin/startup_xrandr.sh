@@ -1,4 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-xrandr && xrandr --output HDMI-1 --mode 1920x1080 --left-of DP-2 --output DP-2 --primary --mode 1920x1080 -r 144
+set -euo pipefail
+
+xrandr \
+  --output DisplayPort-0 --primary --mode 1920x1080 --rate 144 --pos 1920x0 \
+  --output HDMI-A-1 --mode 1920x1080 --rate 60 --pos 0x0
 nitrogen --restore
+
+

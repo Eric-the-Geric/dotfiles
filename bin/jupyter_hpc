@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+if [ -z "$1" ]; then
+    echo "Usage: $0 <node number>"
+    echo "Example: $0 1  -> connects to node301"
+    exit 1
+fi
+
+NODE="node30$1"
+ssh -J geci@login02.hpc.zhaw.ch -L 8888:localhost:8888 geci@$NODE

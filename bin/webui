@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+source ~/openweb/.venv/bin/activate
+open-webui serve
+firefox http://localhost:8080

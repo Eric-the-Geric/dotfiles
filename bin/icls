@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+#ssh geci@gpu.icls.zhaw.ch
+ssh geci@160.85.79.231

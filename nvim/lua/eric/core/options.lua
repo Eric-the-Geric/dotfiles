@@ -3,10 +3,8 @@ local keymap = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 local term_opts = { silent = true }
 keymap("", "<Space>", "<Nop>", { silent = true })
-vim.g.mapleader = " "
---vim.g.have_nerd_font = true
 vim.g.have_nerd_font = true
---vim.g.maplocalleader = " "
+vim.g.mapleader = " "
 vim.cmd([[
 :set number
 :set relativenumber
@@ -26,9 +24,10 @@ vim.cmd([[
 :set cmdheight=2
 :set nowrap
 :set tgc
+:set conceallevel=1
 ]])
 -- keymaps:
-keymap("n", "<leader>pv", ":Explore<CR>", opts)
+keymap("n", "<leader>pv", ":Oil<CR>", opts)
 keymap("v", "<leader>w", ':Wrapvis<CR>', opts)
 keymap("n", "<leader>w",":Wrap<CR>", opts)
 
@@ -84,3 +83,4 @@ vim.api.nvim_create_user_command('Wrapvis',
     end,
     {range = '%'}  -- Allows the command to handle ranges, should apply in visual mode
 )
+vim.treesitter.disable = { "help" }

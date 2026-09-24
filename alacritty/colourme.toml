@@ -1,19 +1,59 @@
+[colors]
+draw_bold_text_with_bright_colors = true
+transparent_background_colors = false
+cursor = { text = "#040409", cursor = "#7a7b83" }
+vi_mode_cursor = { text = "#040409", cursor = "#7a87cc" }
+line_indicator = { foreground = "#e0e7ee", background = "#040409" }
+footer_bar = { foreground = "#040409", background = "#e0e7ee" }
+selection = { text = "#040409", background = "#7a7b83" }
+
+[colors.primary]
+background = "#040409"
+foreground = "#e0e7ee"
+dim_foreground = "#5a5b61"
+bright_foreground = "#f1f4f7"
+
+[colors.search]
+matches = { foreground = "#040409", background = "#7f828c" }
+focused_match = { foreground = "#040409", background = "#7a7b83" }
+
+[colors.hints]
+start = { foreground = "#040409", background = "#7a87cc" }
+end = { foreground = "#040409", background = "#7f828c" }
+
 [colors.normal]
-black = "0x010000"
-blue = "0x240202"
-cyan = "0x4b0808"
-green = "0x7d0405"
-magenta = "0xb20606"
-yellow = "0x742f29"
-red = "0xa95f5a"
-white = "0xddaba0"
+black = "#76777a"
+red = "#87d5ea"
+green = "#7983b9"
+yellow = "#898f98"
+blue = "#7a7b83"
+magenta = "#7a87cc"
+cyan = "#7f828c"
+white = "#e0e7ee"
 
 [colors.bright]
-black = "0x010000"
-blue = "0x2c0101"
-cyan = "0x5c0605"
-green = "0x9c0203"
-magenta = "0x883029"
-yellow = "0xde0304"
-red = "0xc45f58"
-white = "0x00fbf6"
+black = "#8c8d90"
+red = "#a8ecff"
+green = "#8f9ad1"
+yellow = "#a0a6af"
+blue = "#90919a"
+magenta = "#909ee5"
+cyan = "#9699a3"
+white = "#f1f4f7"
+
+[colors.dim]
+black = "#5b5c60"
+red = "#5a8e9e"
+green = "#535a7e"
+yellow = "#5c6067"
+blue = "#5b5c62"
+magenta = "#525a8a"
+cyan = "#5a5c64"
+white = "#959aa0"
+
+[[colors.indexed_colors]]
+index = 16
+color = "#767d87"
+[[colors.indexed_colors]]
+index = 17
+color = "#87d5ea"
