@@ -25,8 +25,8 @@ On the Pop PC, the shared checkout is `~/dotfiles-sync` and the Pop profile is a
 
 The shared palette lives in `i3/config`, `alacritty/colourme.toml`, and `polybar/config.ini`. The existing `colourme` command updates those files from the wallpaper. When i3 restarts, `polybar/launch.sh` derives Rofi's colors from the Polybar palette. Commit the changed shared theme files when you want the other PC to adopt that look.
 
-Polybar uses the shared `config.ini` directly on 3.7 and newer. On older versions, `render-legacy.py` converts the same layout into a temporary config with the older text and tray settings. The Pop profile supplies its Wi-Fi interface; Ethernet is omitted when no interface is configured. The two machines therefore share the layout and colors while using the features their installed Polybar versions support.
-On Pop, the older tray is placed after the right-hand modules, so the renderer draws the top bar's right edge after the tray icons. On Arch, the tray module sits before the shared edge marker.
+Polybar uses the shared `config.ini` directly on 3.7 and newer. On older versions, `render-legacy.py` converts the same layout into a temporary config with the older text and tray settings. The Pop profile supplies its Wi-Fi interface and pins Polybar to `eDP-1`; Ethernet is omitted when no interface is configured. The two machines therefore share the layout and colors while using the features their installed Polybar versions support.
+On Pop, the older tray is placed after the right-hand modules, so the renderer draws the top bar's right edge after the tray icons. The Pop profile also names its battery (`BAT0`) and power adapter (`AC`); the renderer adds a charge percentage and `CHG`/`BAT`/`FULL` status to the lower bar. On Arch, the tray module sits before the shared edge marker.
 
 Alacritty also has a host-selected entry point. The Pop build uses top-level `import` while newer Arch builds use `[general]`; both load the same `common.toml` and `colourme.toml` files. Run `bin/select-host` again after pulling this change so the entry point is linked for that machine.
 
