@@ -9,6 +9,8 @@ Use one shared branch for the theme and application settings. Select a host prof
 
 The selector writes `.local-host` and `i3/host.conf`. Both are ignored by Git. The tracked files under `hosts/` define the display layout, i3 workspace outputs, and preferred Polybar monitor for each PC. If a monitor name changes, edit that host's profile without changing the shared i3 or Polybar layout.
 
+For a new checkout, preview the links with `./install_script.sh --dry-run pop` (or `arch`), then run the command without `--dry-run`. The installer refuses to replace regular files or directories; move those aside deliberately first. On a machine already linked to this repo, `bin/select-host` is enough.
+
 The shared palette lives in `i3/config`, `alacritty/colourme.toml`, and `polybar/config.ini`. The existing `colourme` command updates those files from the wallpaper. When i3 restarts, `polybar/launch.sh` derives Rofi's colors from the Polybar palette. Commit the changed shared theme files when you want the other PC to adopt that look.
 
 Polybar uses the shared `config.ini` directly on 3.7 and newer. On older versions, `render-legacy.py` converts the same layout into a temporary config with the older text and tray settings. The Pop profile supplies its Wi-Fi interface; Ethernet is omitted when no interface is configured. The two machines therefore share the layout and colors while using the features their installed Polybar versions support.
