@@ -7,6 +7,7 @@
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias vim='nvim'
+export PATH="$HOME/bin:$PATH"
 PS1='[\u@\h \W]\$ '
 
 blk='\[\033[01;30m\]'   # Black
