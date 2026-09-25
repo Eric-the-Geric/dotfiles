@@ -1,4 +1,184 @@
-#!/usr/bin/env bash
-source ~/Documents/personal_projects/screenshot/.venv/bin/activate
-python ~/Documents/personal_projects/screenshot/clix11.py
-deactivate
+#!/usr/bin/env python3
+"""Capture a math region, transcribe it, and copy the Markdown to X11."""
+
+import argparse
+import base64
+from datetime import datetime
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
+
+
+PROJECT_DIR = Path.home() / "Documents/personal_projects/screenshot"
+PROMPT = (
+    "Transcribe everything visible in this screenshot as Markdown. "
+    "Use $...$ for inline math and $$...$$ for display math. "
+    "Return only the transcription."
+)
+API_URL = "https://api.openai.com/v1/chat/completions"
+
+
+def notify(message, *, error=False):
+    print(message, file=sys.stderr if error else sys.stdout)
+    try:
+        subprocess.run(
+            ["notify-send", "-u", "critical" if error else "normal",
+             "Math screenshot", message[:240]],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            timeout=3,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        pass
+
+
+def api_key():
+    if os.environ.get("OPENAI_API_KEY"):
+        return os.environ["OPENAI_API_KEY"]
+
+    for path in (Path.home() / ".config/math-screenshot.env", PROJECT_DIR / ".env"):
+        if not path.is_file():
+            continue
+        for line in path.read_text().splitlines():
+            name, separator, value = line.partition("=")
+            if separator and name.strip() == "OPENAI_API_KEY":
+                key = value.strip().strip("'\"")
+                if key:
+                    return key
+    raise RuntimeError("Set OPENAI_API_KEY in the environment or math-screenshot.env")
+
+
+def prompt_text(override):
+    if override:
+        return override
+    prompt_file = PROJECT_DIR / "prompt.txt"
+    return prompt_file.read_text().strip() if prompt_file.is_file() else PROMPT
+
+
+def capture(path):
+    try:
+        result = subprocess.run(
+            ["maim", "-s", str(path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError as error:
+        raise RuntimeError("maim is not installed") from error
+    if result.returncode != 0:
+        # Escape during region selection is a normal cancellation.
+        if not path.exists() and not result.stderr.strip():
+            return False
+        raise RuntimeError(f"Screenshot failed: {result.stderr.strip() or 'selection cancelled'}")
+    if not path.is_file() or path.stat().st_size == 0:
+        raise RuntimeError("Screenshot was empty")
+    return True
+
+
+def transcribe(path, key, model, prompt):
+    image = base64.b64encode(path.read_bytes()).decode("ascii")
+    body = json.dumps({
+        "model": model,
+        "messages": [{
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt},
+                {"type": "image_url", "image_url": {
+                    "url": f"data:image/png;base64,{image}"
+                }},
+            ],
+        }],
+    }).encode("utf-8")
+    request = Request(
+        API_URL,
+        data=body,
+        headers={
+            "Authorization": f"Bearer {key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urlopen(request, timeout=90) as response:
+            data = json.load(response)
+    except HTTPError as error:
+        try:
+            message = json.load(error).get("error", {}).get("message", "")
+        except (ValueError, OSError):
+            message = ""
+        raise RuntimeError(
+            f"OpenAI API returned HTTP {error.code}: {message or error.reason}"
+        ) from error
+    except (URLError, TimeoutError) as error:
+        raise RuntimeError(f"Could not reach OpenAI API: {error}") from error
+
+    try:
+        text = data["choices"][0]["message"]["content"].strip()
+    except (KeyError, IndexError, TypeError, AttributeError) as error:
+        raise RuntimeError("OpenAI API returned no transcription") from error
+    if not text:
+        raise RuntimeError("OpenAI API returned an empty transcription")
+    return text
+
+
+def copy(text):
+    try:
+        subprocess.run(
+            ["xclip", "-selection", "clipboard"],
+            input=text,
+            text=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True,
+            timeout=5,
+        )
+    except FileNotFoundError as error:
+        raise RuntimeError("xclip is not installed") from error
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+        raise RuntimeError("Could not copy transcription to the clipboard") from error
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", default="gpt-4o")
+    parser.add_argument("--prompt", help="Override the transcription prompt")
+    parser.add_argument("--keep", action="store_true", help="Keep the screenshot")
+    parser.add_argument("--image", type=Path, help="Transcribe an existing PNG")
+    args = parser.parse_args()
+
+    try:
+        key = api_key()
+        prompt = prompt_text(args.prompt)
+        if args.image:
+            image_path = args.image
+            if not image_path.is_file():
+                raise RuntimeError(f"Image does not exist: {image_path}")
+            text = transcribe(image_path, key, args.model, prompt)
+        else:
+            with tempfile.TemporaryDirectory(prefix="math-screenshot-") as directory:
+                image_path = Path(directory) / "selection.png"
+                if not capture(image_path):
+                    return 0
+                if args.keep:
+                    pictures = Path.home() / "Pictures"
+                    pictures.mkdir(parents=True, exist_ok=True)
+                    saved = pictures / f"math-screenshot-{datetime.now():%Y-%m-%d_%H-%M-%S}.png"
+                    saved.write_bytes(image_path.read_bytes())
+                text = transcribe(image_path, key, args.model, prompt)
+        copy(text)
+    except (RuntimeError, OSError, ValueError) as error:
+        notify(str(error), error=True)
+        return 1
+
+    notify("Math copied to clipboard")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

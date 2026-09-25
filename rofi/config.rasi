@@ -1,74 +1,106 @@
+@import "colourme.rasi"
+
+* {
+  background: var(colourme-background);
+  foreground: var(colourme-foreground);
+  lightbg: var(colourme-background-alt);
+  lightfg: var(colourme-disabled);
+  red: var(colourme-alert);
+  blue: var(colourme-secondary);
+  normal-background: var(colourme-background);
+  normal-foreground: var(colourme-foreground);
+  alternate-normal-background: var(colourme-background-alt);
+  alternate-normal-foreground: var(colourme-foreground);
+  selected-normal-background: var(colourme-primary);
+  selected-normal-foreground: var(colourme-background);
+  urgent-background: var(colourme-background);
+  urgent-foreground: var(colourme-alert);
+  alternate-urgent-background: var(colourme-background-alt);
+  alternate-urgent-foreground: var(colourme-alert);
+  selected-urgent-background: var(colourme-alert);
+  selected-urgent-foreground: var(colourme-background);
+  active-background: var(colourme-background);
+  active-foreground: var(colourme-secondary);
+  alternate-active-background: var(colourme-background-alt);
+  alternate-active-foreground: var(colourme-secondary);
+  selected-active-background: var(colourme-secondary);
+  selected-active-foreground: var(colourme-background);
+  background-color: var(colourme-background);
+  text-color: var(colourme-foreground);
+  border-color: var(colourme-primary);
+}
+
+window {
+  background-color: var(colourme-background);
+  border: 2px;
+  border-color: var(colourme-primary);
+}
+
 element {
-  background: transparent;
+  background-color: var(colourme-background);
+  text-color: var(colourme-foreground);
+  border: 1px;
+  border-radius: 3px;
+  border-color: var(colourme-background-alt);
+  padding: 5px;
   children: [ element-icon, element-text ];
 }
-element,element-text,element-icon, button {
-    cursor: pointer;
+
+element, element-text, element-icon, button {
+  cursor: pointer;
+}
+
+element-text {
+  background-color: transparent;
+  text-color: inherit;
+  font: "Fira Code Nerd Font 13";
+}
+
+element.alternate.normal {
+  background-color: var(colourme-background-alt);
+}
+
+element.selected.normal, element.selected.active {
+  background-color: var(colourme-primary);
+  text-color: var(colourme-background);
+}
+
+element.urgent {
+  text-color: var(colourme-alert);
 }
 
 inputbar {
   margin: 0px 10px;
   spacing: 0.4em;
-  border-radius: 				 6px;
-
-  border:        1px;
+  border-radius: 6px;
+  border: 1px;
   border-bottom: 3px;
-  background-color: #00000055;
-  border-color:		#ffffff20;
-  children: [entry,overlay,case-indicator];
+  background-color: var(colourme-background-alt);
+  border-color: var(colourme-primary);
+  children: [ entry, overlay, case-indicator ];
 }
-
-
 
 listview, message {
   padding: 0.5em;
-  border:  1px;
+  border: 1px;
   border-radius: 0px;
-  border-color: #00000020;
+  border-color: var(colourme-background-alt);
   background-color: transparent;
-
   columns: 3;
-  lines:   7;
+  lines: 7;
 }
+
 listview {
   border: 0px;
   spacing: 10px;
-  background-color: transparent;
-  border-color:     #fff00020;
-  scrollbar:    false;
+  scrollbar: false;
 }
-
-
-element {
-    border:  1px;
-    border-radius: 3px;
-    padding: 5px;
-    border-color: #00000020;
-}
-
-element-text {
-    background-color: transparent;
-    text-color:       #000000cc;
-    font: "Fira Code Nerd Font 13";
-}
-
-element normal.normal {
-    background-color: #00000055;
-}
-element.alternate.normal {
-    background-color: #00000055;
-}
-
-element.selected.normal {
-    background-color: #ff000000;
-}
-
 
 entry {
-    placeholder: "Search here";
-    placeholder-color: #00000020;
-    border-color: transparent;
-    background-color: transparent;
-    border:        10px;
-    text-color: #ffffffcc;
+  placeholder: "Search here";
+  placeholder-color: var(colourme-disabled);
+  border-color: transparent;
+  background-color: transparent;
+  border: 10px;
+  text-color: var(colourme-foreground);
 }

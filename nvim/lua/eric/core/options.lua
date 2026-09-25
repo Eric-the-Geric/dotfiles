@@ -83,4 +83,3 @@ vim.api.nvim_create_user_command('Wrapvis',
     end,
     {range = '%'}  -- Allows the command to handle ranges, should apply in visual mode
 )
-vim.treesitter.disable = { "help" }

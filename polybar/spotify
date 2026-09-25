@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+status=$(playerctl --player=spotify status 2>/dev/null) || exit 0
+case $status in
+    Playing) toggle='󰏤' ;;
+    Paused|Stopped) toggle='󰐊' ;;
+    *) exit 0 ;;
+esac
+
+title=$(playerctl --player=spotify metadata --format '{{ title }}' 2>/dev/null)
+title=${title//$'\n'/ }
+title=${title//$'\r'/ }
+title=${title//$'\t'/ }
+# Metadata must not be able to inject Polybar formatting or click actions.
+title=${title//'%{'/'％{'}
+title=${title:0:32}
+[[ -n $title ]] || title=Spotify
+
+printf '  %s  %%{A1:playerctl --player=spotify play-pause:}%s%%{A}  %%{A1:playerctl --player=spotify next:}󰒭%%{A}\n' "$title" "$toggle"

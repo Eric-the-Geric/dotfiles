@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Small arithmetic prompt for the Polybar calculator button."""
+"""Keypad calculator opened from Polybar."""
 
 import ast
+import configparser
 import math
 import operator
+from pathlib import Path
 import subprocess
+import tkinter as tk
 
 
 OPERATORS = {
@@ -17,6 +20,16 @@ OPERATORS = {
     ast.Pow: operator.pow,
 }
 SIGNS = {ast.UAdd: operator.pos, ast.USub: operator.neg}
+SYMBOLS = str.maketrans({"×": "*", "÷": "/", "−": "-", "^": "**"})
+FALLBACK_COLORS = {
+    "background": "#081c30",
+    "background-alt": "#283847",
+    "foreground": "#fbf2e1",
+    "primary": "#8f8691",
+    "secondary": "#c17b88",
+    "disabled": "#5e686f",
+    "alert": "#f5ceb6",
+}
 
 
 def calculate(node):
@@ -31,48 +44,251 @@ def calculate(node):
             raise ValueError("Exponent is too large")
         result = OPERATORS[type(node.op)](left, right)
     else:
-        raise ValueError("Use numbers and + - * / // % ** with parentheses")
+        raise ValueError("Use numbers and arithmetic operators")
 
     if not math.isfinite(result) or abs(result) > 1e12:
         raise ValueError("Result is too large")
     return result
 
 
-def main():
-    prompt = subprocess.run(
-        ["rofi", "-dmenu", "-p", "Calculate"],
-        input="",
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    expression = prompt.stdout.strip()
-    if prompt.returncode != 0 or not expression:
-        return
-
+def evaluate(expression):
+    if len(expression) > 80:
+        raise ValueError("Expression is too long")
     try:
-        if len(expression) > 80:
-            raise ValueError("Expression is too long")
-        result = calculate(ast.parse(expression, mode="eval").body)
-    except (SyntaxError, ValueError, ZeroDivisionError, OverflowError, TypeError) as error:
-        subprocess.run(["rofi", "-e", str(error)], check=False)
-        return
+        return calculate(ast.parse(expression.translate(SYMBOLS), mode="eval").body)
+    except SyntaxError as error:
+        raise ValueError("Incomplete or invalid expression") from error
 
-    answer = f"{result:.12g}"
-    selected = subprocess.run(
-        ["rofi", "-dmenu", "-p", "Enter to copy", "-no-custom"],
-        input=f"{answer}\n",
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    if selected.returncode == 0:
-        subprocess.run(
-            ["xclip", "-selection", "clipboard"],
-            input=answer,
-            text=True,
-            check=False,
+
+def format_result(result):
+    return str(result) if isinstance(result, int) else f"{result:.12g}"
+
+
+def load_colors():
+    config = configparser.ConfigParser(interpolation=None)
+    config.read(Path(__file__).with_name("config.ini"))
+    return {
+        name: config.get("colors", name, fallback=fallback)
+        for name, fallback in FALLBACK_COLORS.items()
+    }
+
+
+class Calculator:
+    def __init__(self, root):
+        self.root = root
+        self.colors = load_colors()
+        self.expression = tk.StringVar()
+        self.preview = tk.StringVar()
+        self.message = tk.StringVar(value="Type or click · Enter calculates")
+        self.just_evaluated = False
+        self.expression.trace_add("write", self.update_preview)
+
+        root.title("Calculator")
+        root.configure(bg=self.colors["background"])
+        root.geometry("340x490")
+        root.resizable(False, False)
+        try:
+            root.attributes("-type", "dialog")
+        except tk.TclError:
+            pass
+
+        panel = tk.Frame(root, bg=self.colors["background"], padx=12, pady=12)
+        panel.pack(fill="both", expand=True)
+        for column in range(4):
+            panel.columnconfigure(column, weight=1, uniform="keys")
+        for row in range(2, 8):
+            panel.rowconfigure(row, weight=1)
+
+        self.display = tk.Entry(
+            panel,
+            textvariable=self.expression,
+            font=("Hack Nerd Font", 21),
+            bg=self.colors["background-alt"],
+            fg=self.colors["foreground"],
+            insertbackground=self.colors["foreground"],
+            selectbackground=self.colors["primary"],
+            relief="flat",
+            justify="right",
+            bd=12,
         )
+        self.display.grid(row=0, column=0, columnspan=4, sticky="ew", pady=(0, 5))
+        self.display.bind("<KeyPress>", self.on_keypress)
+
+        tk.Label(
+            panel,
+            textvariable=self.preview,
+            font=("Hack Nerd Font", 11),
+            bg=self.colors["background"],
+            fg=self.colors["secondary"],
+            anchor="e",
+        ).grid(row=1, column=0, columnspan=4, sticky="ew", pady=(0, 5))
+
+        keys = [
+            ["C", "(", ")", "⌫"],
+            ["7", "8", "9", "÷"],
+            ["4", "5", "6", "×"],
+            ["1", "2", "3", "−"],
+            ["0", ".", "mod", "+"],
+        ]
+        for row, key_row in enumerate(keys, start=2):
+            for column, label in enumerate(key_row):
+                self.button(panel, label, row, column)
+        self.button(panel, "//", 7, 0)
+        self.button(panel, "^", 7, 1)
+        self.button(panel, "=", 7, 2, span=2)
+
+        tk.Button(
+            panel,
+            text="Copy result",
+            command=self.copy_result,
+            font=("Hack Nerd Font", 12),
+            bg=self.colors["secondary"],
+            fg=self.colors["background"],
+            activebackground=self.colors["primary"],
+            activeforeground=self.colors["background"],
+            relief="flat",
+            bd=0,
+            cursor="hand2",
+        ).grid(row=8, column=0, columnspan=4, sticky="nsew", pady=(8, 0), ipady=5)
+
+        tk.Label(
+            panel,
+            textvariable=self.message,
+            font=("Hack Nerd Font", 9),
+            bg=self.colors["background"],
+            fg=self.colors["disabled"],
+            anchor="center",
+        ).grid(row=9, column=0, columnspan=4, sticky="ew", pady=(8, 0))
+
+        root.bind("<Return>", self.on_enter)
+        root.bind("<KP_Enter>", self.on_enter)
+        root.bind("<Escape>", lambda _event: root.destroy())
+        self.display.focus_set()
+
+    def button(self, panel, label, row, column, span=1):
+        if label == "C":
+            action = self.clear
+        elif label == "⌫":
+            action = self.backspace
+        elif label == "=":
+            action = self.show_result
+        else:
+            text = "%" if label == "mod" else label
+            action = lambda value=text: self.insert(value)
+
+        accent = label == "="
+        background = self.colors["primary"] if accent else self.colors["background-alt"]
+        foreground = (
+            self.colors["background"] if accent
+            else self.colors["alert"] if label == "C"
+            else self.colors["secondary"] if label in {"÷", "×", "−", "+", "^", "//", "mod"}
+            else self.colors["foreground"]
+        )
+        tk.Button(
+            panel,
+            text=label,
+            command=action,
+            font=("Hack Nerd Font", 15),
+            bg=background,
+            fg=foreground,
+            activebackground=self.colors["secondary"],
+            activeforeground=self.colors["background"],
+            relief="flat",
+            bd=0,
+            cursor="hand2",
+        ).grid(row=row, column=column, columnspan=span, sticky="nsew", padx=3, pady=3)
+
+    def update_preview(self, *_args):
+        expression = self.expression.get().strip()
+        if not expression or self.just_evaluated:
+            self.preview.set("")
+            return
+        try:
+            answer = format_result(evaluate(expression))
+        except (ValueError, ZeroDivisionError, OverflowError, TypeError):
+            self.preview.set("")
+        else:
+            self.preview.set(f"= {answer}")
+
+    def insert(self, text):
+        if self.just_evaluated and text in "0123456789.(":
+            self.expression.set("")
+        self.just_evaluated = False
+        try:
+            self.display.delete("sel.first", "sel.last")
+        except tk.TclError:
+            pass
+        self.display.insert(tk.INSERT, text)
+        self.display.focus_set()
+
+    def clear(self):
+        self.just_evaluated = False
+        self.expression.set("")
+        self.message.set("Type or click · Enter calculates")
+        self.display.focus_set()
+
+    def backspace(self):
+        self.just_evaluated = False
+        try:
+            self.display.delete("sel.first", "sel.last")
+        except tk.TclError:
+            position = self.display.index(tk.INSERT)
+            if position:
+                self.display.delete(position - 1)
+        self.display.focus_set()
+
+    def result(self):
+        expression = self.expression.get().strip()
+        if not expression:
+            return None
+        try:
+            return format_result(evaluate(expression))
+        except (ValueError, ZeroDivisionError, OverflowError, TypeError) as error:
+            self.message.set(str(error))
+            return None
+
+    def show_result(self):
+        answer = self.result()
+        if answer is None:
+            return
+        self.just_evaluated = True
+        self.expression.set(answer)
+        self.message.set("Click Copy result to use this elsewhere")
+        self.display.icursor(tk.END)
+        self.display.focus_set()
+
+    def copy_result(self):
+        answer = self.result()
+        if answer is None:
+            return
+        try:
+            subprocess.run(
+                ["xclip", "-selection", "clipboard"],
+                input=answer,
+                text=True,
+                check=True,
+                timeout=3,
+            )
+        except (FileNotFoundError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            self.message.set("Could not copy to clipboard")
+        else:
+            self.message.set("Result copied to clipboard")
+
+    def on_keypress(self, event):
+        if self.just_evaluated and event.char:
+            if event.char in "0123456789.(":
+                self.expression.set("")
+            self.just_evaluated = False
+
+    def on_enter(self, _event):
+        self.show_result()
+        return "break"
+
+
+def main():
+    root = tk.Tk(className="PolybarCalculator")
+    Calculator(root)
+    root.mainloop()
 
 
 if __name__ == "__main__":

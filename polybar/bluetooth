@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+controller=$(bluetoothctl --timeout 3 show 2>/dev/null)
+if [[ $1 == toggle ]]; then
+    if [[ $controller == *'Powered: yes'* ]]; then
+        bluetoothctl --timeout 10 power off >/dev/null
+    elif [[ -n $controller ]]; then
+        bluetoothctl --timeout 10 power on >/dev/null
+    fi
+    exit
+fi
+
+if [[ $1 != status && -n $1 ]]; then
+    printf 'usage: bluetooth [status|toggle]\n' >&2
+    exit 2
+fi
+
+if [[ $controller != *'Powered: yes'* ]]; then
+    printf '󰂲  BT off\n'
+    exit
+fi
+
+connected=$(bluetoothctl --timeout 3 devices Connected 2>/dev/null)
+IFS= read -r first_device <<< "$connected"
+if [[ $first_device =~ ^Device[[:space:]]+([[:xdigit:]:]+)[[:space:]]+(.+)$ ]]; then
+    address=${BASH_REMATCH[1]}
+    name=${BASH_REMATCH[2]}
+    name=${name//'%{'/'％{'}
+    name=${name:0:16}
+    details=$(bluetoothctl --timeout 3 info "$address" 2>/dev/null)
+    battery=
+    while IFS= read -r line; do
+        if [[ $line =~ Battery[[:space:]]Percentage:.*\(([0-9]+)\) ]]; then
+            battery=" ${BASH_REMATCH[1]}%"
+            break
+        fi
+    done <<< "$details"
+    printf '󰂱  %s%s\n' "$name" "$battery"
+else
+    printf '󰂯  BT\n'
+fi

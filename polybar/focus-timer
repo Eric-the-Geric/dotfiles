@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""A small persistent focus/break timer for Polybar."""
+
+import fcntl
+import json
+import math
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+
+DURATIONS = {"focus": 25 * 60, "break": 5 * 60}
+STATE_DIR = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "polybar"
+STATE_FILE = STATE_DIR / "focus-timer.json"
+
+
+def default_state():
+    return {"mode": "focus", "remaining": DURATIONS["focus"], "deadline": None}
+
+
+def main():
+    command = sys.argv[1] if len(sys.argv) == 2 else "status"
+    if command not in {"status", "toggle", "mode", "reset"}:
+        raise SystemExit("usage: focus-timer [status|toggle|mode|reset]")
+
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    completed = None
+    with STATE_FILE.open("a+", encoding="utf-8") as state_file:
+        fcntl.flock(state_file, fcntl.LOCK_EX)
+        state_file.seek(0)
+        try:
+            state = json.load(state_file)
+            if (
+                state["mode"] not in DURATIONS
+                or not isinstance(state["remaining"], int)
+                or state["remaining"] < 0
+                or (
+                    state["deadline"] is not None
+                    and not isinstance(state["deadline"], (int, float))
+                )
+            ):
+                raise ValueError("invalid timer state")
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+            state = default_state()
+
+        now = time.time()
+        changed = False
+        if state["deadline"] is not None and now >= state["deadline"]:
+            completed = state["mode"]
+            state["mode"] = "break" if completed == "focus" else "focus"
+            state["remaining"] = DURATIONS[state["mode"]]
+            state["deadline"] = None
+            changed = True
+
+        if command == "toggle":
+            if state["deadline"] is None:
+                state["deadline"] = now + state["remaining"]
+            else:
+                state["remaining"] = max(0, math.ceil(state["deadline"] - now))
+                state["deadline"] = None
+            changed = True
+        elif command == "mode":
+            state["mode"] = "break" if state["mode"] == "focus" else "focus"
+            state["remaining"] = DURATIONS[state["mode"]]
+            state["deadline"] = None
+            changed = True
+        elif command == "reset":
+            state["remaining"] = DURATIONS[state["mode"]]
+            state["deadline"] = None
+            changed = True
+
+        if changed:
+            state_file.seek(0)
+            state_file.truncate()
+            json.dump(state, state_file)
+            state_file.flush()
+
+        if command == "status":
+            remaining = (
+                max(0, math.ceil(state["deadline"] - now))
+                if state["deadline"] is not None
+                else state["remaining"]
+            )
+            icon = "󰏤" if state["deadline"] is not None else "󰐊"
+            print(f"󰔟  {state['mode'].upper()} {remaining // 60:02}:{remaining % 60:02} {icon}")
+
+    if completed:
+        message = (
+            "Focus complete. Take a 5-minute break."
+            if completed == "focus"
+            else "Break complete. Ready for another focus session."
+        )
+        sound = "complete" if completed == "focus" else "bell"
+        try:
+            subprocess.run(
+                ["canberra-gtk-play", "-i", sound, "-d", "Focus timer"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+                timeout=3,
+            )
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+        try:
+            subprocess.run(["notify-send", "Focus timer", message], check=False, timeout=3)
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+
+if __name__ == "__main__":
+    main()

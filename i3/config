@@ -31,7 +31,7 @@ bindsym $mod+Shift+minus move scratchpad
 
 # Screenshots
 bindsym $mod+Shift+s exec --no-startup-id flameshot gui
-bindsym $mod+Shift+a exec --no-startup-id math_screenshot
+bindsym $mod+Shift+a exec --no-startup-id /home/eric/bin/math_screenshot
 
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
@@ -213,16 +213,16 @@ bindsym $mod+f exec thunar
 
 include ~/.config/i3/colours.conf
 #>>>>>colours>>>>>
-set $bg #06092c
-set $gray #5e5d77
-set $darkgray #262747
-set $red #30f2fd
-set $green #9f77d6
-set $yellow #1ecbf4
-set $blue #687dc8
-set $purple #ed81f4
-set $aqua #9f6fcf
-set $white #fbf2fe
+set $bg #081c30
+set $gray #5e686f
+set $darkgray #283847
+set $red #f5ceb6
+set $green #489db8
+set $yellow #85cad5
+set $blue #8f8691
+set $purple #f67b53
+set $aqua #c17b88
+set $white #fbf2e1
 #<<<<<colours<<<<<
 
 # Start i3bar to display a workspace bar (plus the system information i3status
@@ -261,4 +261,3 @@ exec --no-startup-id xset s off && xset -dpms
 exec --no-startup-id obsidian
 for_window [class="obsidian"], move scratchpad
 for_window [class="spotify"], move scratchpad
-
