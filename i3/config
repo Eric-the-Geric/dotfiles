@@ -212,16 +212,16 @@ bindsym $mod+f exec thunar
 
 include ~/.config/i3/colours.conf
 #>>>>>colours>>>>>
-set $bg #081c30
-set $gray #5e686f
-set $darkgray #283847
-set $red #f5ceb6
-set $green #489db8
-set $yellow #85cad5
-set $blue #8f8691
-set $purple #f67b53
-set $aqua #c17b88
-set $white #fbf2e1
+set $bg #01231b
+set $gray #576e69
+set $darkgray #224039
+set $red #85eec0
+set $green #2eae38
+set $yellow #7dd4e9
+set $blue #52959b
+set $purple #3ebcf7
+set $aqua #4a8ff8
+set $white #fdffff
 #<<<<<colours<<<<<
 
 # Start i3bar to display a workspace bar (plus the system information i3status
