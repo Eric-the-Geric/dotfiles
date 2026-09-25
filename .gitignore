@@ -1,4 +1,5 @@
 /.local-host
 /i3/host.conf
+/alacritty/alacritty.toml
 __pycache__/
 *.pyc

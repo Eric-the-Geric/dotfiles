@@ -26,6 +26,9 @@ On the Pop PC, the shared checkout is `~/dotfiles-sync` and the Pop profile is a
 The shared palette lives in `i3/config`, `alacritty/colourme.toml`, and `polybar/config.ini`. The existing `colourme` command updates those files from the wallpaper. When i3 restarts, `polybar/launch.sh` derives Rofi's colors from the Polybar palette. Commit the changed shared theme files when you want the other PC to adopt that look.
 
 Polybar uses the shared `config.ini` directly on 3.7 and newer. On older versions, `render-legacy.py` converts the same layout into a temporary config with the older text and tray settings. The Pop profile supplies its Wi-Fi interface; Ethernet is omitted when no interface is configured. The two machines therefore share the layout and colors while using the features their installed Polybar versions support.
+On Pop, the older tray is placed after the right-hand modules, so the renderer draws the top bar's right edge after the tray icons. On Arch, the tray module sits before the shared edge marker.
+
+Alacritty also has a host-selected entry point. The Pop build uses top-level `import` while newer Arch builds use `[general]`; both load the same `common.toml` and `colourme.toml` files. Run `bin/select-host` again after pulling this change so the entry point is linked for that machine.
 
 Neovim chooses the Treesitter `master` setup on versions before 0.12 and the `main` setup on 0.12 and newer. Each has its own tracked Lazy lockfile (`lazy-lock-nvim11.json` and `lazy-lock.json`). The `main` setup also needs a working `tree-sitter` CLI. Keep other machine-only shell settings and API keys in `~/.config/dotfiles/local.bash`, which `.bashrc` sources and Git never tracks.
 

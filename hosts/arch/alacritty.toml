@@ -1,0 +1,3 @@
+[general]
+import = ["~/.config/alacritty/common.toml", "~/.config/alacritty/colourme.toml"]
+live_config_reload = true

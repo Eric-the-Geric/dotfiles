@@ -22,14 +22,21 @@ def render(config: str) -> str:
             continue
 
         if name.startswith("bar/"):
+            bar_removed = removed | ({"edge-right"} if name == "bar/time_s1" else set())
             section = re.sub(
                 r"^(modules-right\s*=\s*)(.*)$",
                 lambda match: match.group(1)
-                + " ".join(item for item in match.group(2).split() if item not in removed),
+                + " ".join(item for item in match.group(2).split() if item not in bar_removed),
                 section,
                 flags=re.MULTILINE,
             )
         if name == "bar/time_s1":
+            # The old tray is appended after modules-right, unlike the 3.7
+            # tray module. Make the bar slightly narrower and draw its real
+            # right border after the tray, preserving the outer screen gap.
+            section = re.sub(r"^width\s*=.*$", "width = 98%", section, flags=re.MULTILINE)
+            section = re.sub(r"^border-right-size\s*=.*$", "border-right-size = 3px", section, flags=re.MULTILINE)
+            section = re.sub(r"^border-right-color\s*=.*$", "border-right-color = ${env:POLYBAR_I3_BORDER}", section, flags=re.MULTILINE)
             section = section.replace("enable-ipc = true", "tray-position = right\nenable-ipc = true", 1)
 
         if name in {"module/wlan", "module/eth"}:

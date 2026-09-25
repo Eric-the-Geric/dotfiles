@@ -32,6 +32,10 @@ if [[ -e $repo_dir/i3/host.conf && ! -L $repo_dir/i3/host.conf ]]; then
     printf 'Refusing to replace existing %s\n' "$repo_dir/i3/host.conf" >&2
     exit 1
 fi
+if [[ -e $repo_dir/alacritty/alacritty.toml && ! -L $repo_dir/alacritty/alacritty.toml ]]; then
+    printf 'Refusing to replace existing %s\n' "$repo_dir/alacritty/alacritty.toml" >&2
+    exit 1
+fi
 
 for index in "${!sources[@]}"; do
     source="$repo_dir/${sources[$index]}"

@@ -9,11 +9,15 @@ case "$host" in
 esac
 
 host_config="$repo_dir/i3/host.conf"
-if [[ -e $host_config && ! -L $host_config ]]; then
-  printf 'Refusing to replace %s; move it aside first.\n' "$host_config" >&2
-  exit 1
-fi
+alacritty_config="$repo_dir/alacritty/alacritty.toml"
+for config in "$host_config" "$alacritty_config"; do
+  if [[ -e $config && ! -L $config ]]; then
+    printf 'Refusing to replace %s; move it aside first.\n' "$config" >&2
+    exit 1
+  fi
+done
 
 ln -sfn "../hosts/$host/i3.conf" "$host_config"
+ln -sfn "../hosts/$host/alacritty.toml" "$alacritty_config"
 printf '%s\n' "$host" > "$repo_dir/.local-host"
 printf 'Selected %s for %s\n' "$host" "$repo_dir"
