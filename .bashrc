@@ -27,30 +27,7 @@ my_n="$\[\e[01;31m\]\n\[\e[01;37m\]"
 #export PS1="\[\e[01;37m\]┌─${my_t}──${my_u}──${my_h}:${my_w}${my_n}└──\[\e[01;37m\]>>\[\e[0m\]"
 export PS1="${blu}┌─${wht}${my_t}──${my_u}──${my_h}:${my_w}${my_n}${blu}└──${blu}>>\[\e[0m\]"
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/eric/mambaforge/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/eric/mambaforge/etc/profile.d/conda.sh" ]; then
-        . "/home/eric/mambaforge/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/eric/mambaforge/bin:$PATH"
-    fi
+# Keep machine paths, environment managers, and secrets outside Git.
+if [[ -r $HOME/.config/dotfiles/local.bash ]]; then
+    source "$HOME/.config/dotfiles/local.bash"
 fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$HOME/bin/:$PATH"
-if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
-
-
-if command -v pyenv 1>/dev/null 2>&1; then
-                         eval "$(pyenv init -)"
-                      fi
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

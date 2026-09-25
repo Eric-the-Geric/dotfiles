@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
 
-xrandr \
-  --output DisplayPort-0 --primary --mode 1920x1080 --rate 144 --pos 1920x0 \
-  --output HDMI-A-1 --mode 1920x1080 --rate 60 --pos 0x0
+repo_dir=$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")
+host_file="$repo_dir/.local-host"
+[[ -f $host_file ]] || exit 0
+host=$(<"$host_file")
+case "$host" in
+  pop|arch) exec "$repo_dir/hosts/$host/displays.sh" ;;
+  *) printf 'Unknown host profile: %s\n' "$host" >&2; exit 1 ;;
+esac

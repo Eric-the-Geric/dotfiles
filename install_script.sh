@@ -1,15 +1,49 @@
-#!/bin/bash
-#TODO - The script doesn't actually work yet was just testing for now
-rm -rf ~/.bashrc 
-rm -rf ~/.config/nvim
-rm -rf ~/.config/i3
-rm -rf ~/.tmux.conf
+#!/usr/bin/env bash
+set -euo pipefail
 
-ln -sf ~/dotfiles/.bashrc ~/.bashrc 
-ln -sf ~/dotfiles/nvim ~/.config/nvim
-ln -sf ~/dotfiles/i3 ~/.config/i3
-ln -sf ~/dotfiles/alacritty ~/.config/alacritty
-ln -sf ~/dotfiles/tmux.conf ~/.tmux.conf
+repo_dir=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+dry_run=false
+if [[ ${1:-} == --dry-run ]]; then
+    dry_run=true
+    shift
+fi
+host=${1:-}
+case "$host" in
+    pop|arch) ;;
+    *) printf 'Usage: %s [--dry-run] {pop|arch}\n' "$0" >&2; exit 2 ;;
+esac
 
+sources=(.bashrc .tmux.conf nvim i3 alacritty polybar rofi bin)
+targets=(
+    "$HOME/.bashrc" "$HOME/.tmux.conf"
+    "$HOME/.config/nvim" "$HOME/.config/i3" "$HOME/.config/alacritty"
+    "$HOME/.config/polybar" "$HOME/.config/rofi" "$HOME/bin"
+)
 
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+# Check every destination before replacing any links. Regular files and
+# directories need to be moved aside deliberately by their owner.
+for target in "${targets[@]}"; do
+    if [[ -e $target && ! -L $target ]]; then
+        printf 'Refusing to replace existing %s\n' "$target" >&2
+        exit 1
+    fi
+done
+if [[ -e $repo_dir/i3/host.conf && ! -L $repo_dir/i3/host.conf ]]; then
+    printf 'Refusing to replace existing %s\n' "$repo_dir/i3/host.conf" >&2
+    exit 1
+fi
+
+for index in "${!sources[@]}"; do
+    source="$repo_dir/${sources[$index]}"
+    target="${targets[$index]}"
+    if $dry_run; then
+        printf 'Would link %s -> %s\n' "$target" "$source"
+    else
+        mkdir -p "$(dirname "$target")"
+        ln -sfn "$source" "$target"
+    fi
+done
+
+if ! $dry_run; then
+    "$repo_dir/bin/select-host" "$host"
+fi

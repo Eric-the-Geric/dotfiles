@@ -16,6 +16,22 @@ local languages = {
   "vimdoc",
 }
 
+if vim.fn.has("nvim-0.12") == 0 then
+  return {
+    "nvim-treesitter/nvim-treesitter",
+    branch = "master",
+    lazy = false,
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = languages,
+        auto_install = true,
+        highlight = { enable = true },
+      })
+    end,
+  }
+end
+
 return {
   "nvim-treesitter/nvim-treesitter",
   branch = "main",

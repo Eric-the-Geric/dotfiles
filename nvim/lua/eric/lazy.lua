@@ -11,8 +11,11 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local lockfile = vim.fn.stdpath("config")
+  .. (vim.fn.has("nvim-0.12") == 1 and "/lazy-lock.json" or "/lazy-lock-nvim11.json")
+
 require("lazy").setup({
 	{ import = "eric.plugins" },
 	{ import = "eric.plugins.lsp" },
 
-})
+}, { lockfile = lockfile })

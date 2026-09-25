@@ -1,0 +1,18 @@
+# One look on Arch and Pop!_OS
+
+Use one shared branch for the theme and application settings. Select a host profile once on each PC:
+
+```bash
+./bin/select-host pop   # work laptop
+./bin/select-host arch  # Arch desktop
+```
+
+The selector writes `.local-host` and `i3/host.conf`. Both are ignored by Git. The tracked files under `hosts/` define the display layout, i3 workspace outputs, and preferred Polybar monitor for each PC. If a monitor name changes, edit that host's profile without changing the shared i3 or Polybar layout.
+
+The shared palette lives in `i3/config`, `alacritty/colourme.toml`, and `polybar/config.ini`. The existing `colourme` command updates those files from the wallpaper. When i3 restarts, `polybar/launch.sh` derives Rofi's colors from the Polybar palette. Commit the changed shared theme files when you want the other PC to adopt that look.
+
+Polybar uses the shared `config.ini` directly on 3.7 and newer. On older versions, `render-legacy.py` converts the same layout into a temporary config with the older text and tray settings. The Pop profile supplies its Wi-Fi interface; Ethernet is omitted when no interface is configured. The two machines therefore share the layout and colors while using the features their installed Polybar versions support.
+
+Neovim chooses the Treesitter `master` setup on versions before 0.12 and the `main` setup on 0.12 and newer. Each has its own tracked Lazy lockfile (`lazy-lock-nvim11.json` and `lazy-lock.json`). The `main` setup also needs a working `tree-sitter` CLI. Keep other machine-only shell settings and API keys in `~/.config/dotfiles/local.bash`, which `.bashrc` sources and Git never tracks.
+
+After the integration branch has been merged, make shared changes on one PC, commit them, and pull them on the other. Keep local work committed or safely set aside before pulling. The host selection survives pulls because its files are ignored. Use the same branch on both PCs; the profiles hold the machine differences.

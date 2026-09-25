@@ -143,8 +143,7 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10: "
 
-workspace $ws1 output DisplayPort-0
-workspace $ws2 output HDMI-A-0
+include ~/.config/i3/host.conf
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1

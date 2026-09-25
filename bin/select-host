@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_dir=$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")
+host=${1:-}
+case "$host" in
+  pop|arch) ;;
+  *) printf 'Usage: %s {pop|arch}\n' "$0" >&2; exit 2 ;;
+esac
+
+host_config="$repo_dir/i3/host.conf"
+if [[ -e $host_config && ! -L $host_config ]]; then
+  printf 'Refusing to replace %s; move it aside first.\n' "$host_config" >&2
+  exit 1
+fi
+
+ln -sfn "../hosts/$host/i3.conf" "$host_config"
+printf '%s\n' "$host" > "$repo_dir/.local-host"
+printf 'Selected %s for %s\n' "$host" "$repo_dir"

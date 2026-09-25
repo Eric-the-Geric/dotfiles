@@ -1,6 +1,8 @@
 # This is the repository for all my configuration files
 in order to use them you need to make sure you have a couple of things installed
 
+For the shared Arch and Pop!_OS setup, see [One look on Arch and Pop!_OS](docs/multi-host.md).
+
 
 #TODO make an installation script
 ## neovim >=9. 
@@ -23,7 +25,6 @@ Just make you install the correct fonts and you are most likely good to go
 ## i3
 
 #TODO make instructions for i3.
-
 
 
 
