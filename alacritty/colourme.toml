@@ -1,59 +1,59 @@
 [colors]
 draw_bold_text_with_bright_colors = true
 transparent_background_colors = false
-cursor = { text = "#081c30", cursor = "#8f8691" }
-vi_mode_cursor = { text = "#081c30", cursor = "#f67b53" }
-line_indicator = { foreground = "#fbf2e1", background = "#081c30" }
-footer_bar = { foreground = "#081c30", background = "#fbf2e1" }
-selection = { text = "#081c30", background = "#8f8691" }
+cursor = { text = "#08132e", cursor = "#7685a3" }
+vi_mode_cursor = { text = "#08132e", cursor = "#af85ad" }
+line_indicator = { foreground = "#fefefe", background = "#08132e" }
+footer_bar = { foreground = "#08132e", background = "#fefefe" }
+selection = { text = "#08132e", background = "#7685a3" }
 
 [colors.primary]
-background = "#081c30"
-foreground = "#fbf2e1"
-dim_foreground = "#5e686f"
-bright_foreground = "#fdf9f2"
+background = "#08132e"
+foreground = "#fefefe"
+dim_foreground = "#5c6375"
+bright_foreground = "#ffffff"
 
 [colors.search]
-matches = { foreground = "#081c30", background = "#c17b88" }
-focused_match = { foreground = "#081c30", background = "#8f8691" }
+matches = { foreground = "#08132e", background = "#9781a5" }
+focused_match = { foreground = "#08132e", background = "#7685a3" }
 
 [colors.hints]
-start = { foreground = "#081c30", background = "#f67b53" }
-end = { foreground = "#081c30", background = "#c17b88" }
+start = { foreground = "#08132e", background = "#af85ad" }
+end = { foreground = "#08132e", background = "#9781a5" }
 
 [colors.normal]
-black = "#7a8590"
-red = "#f5ceb6"
-green = "#489db8"
-yellow = "#85cad5"
-blue = "#8f8691"
-magenta = "#f67b53"
-cyan = "#c17b88"
-white = "#fbf2e1"
+black = "#797f8e"
+red = "#eec7de"
+green = "#708fc0"
+yellow = "#47b1ea"
+blue = "#7685a3"
+magenta = "#af85ad"
+cyan = "#9781a5"
+white = "#fefefe"
 
 [colors.bright]
-black = "#909ca7"
-red = "#fee6d7"
-green = "#61b5d0"
-yellow = "#9de3ee"
-blue = "#a69da8"
-magenta = "#f8a287"
-cyan = "#da929f"
-white = "#fdf9f2"
+black = "#8f96a5"
+red = "#fde2f2"
+green = "#86a6d9"
+yellow = "#71c8fb"
+blue = "#8c9cbb"
+magenta = "#c79cc5"
+cyan = "#ae98bd"
+white = "#ffffff"
 
 [colors.dim]
-black = "#5c6976"
-red = "#a49188"
-green = "#32718a"
-yellow = "#5a8f9d"
-blue = "#666774"
-magenta = "#a55b47"
-cyan = "#835d6b"
-white = "#a8a9a5"
+black = "#5c6274"
+red = "#a08aa2"
+green = "#4d658e"
+yellow = "#327baa"
+blue = "#56637f"
+magenta = "#765e82"
+cyan = "#685e7e"
+white = "#aaaeb7"
 
 [[colors.indexed_colors]]
 index = 16
-color = "#85cad5"
+color = "#47b1ea"
 [[colors.indexed_colors]]
 index = 17
-color = "#f5ceb6"
+color = "#eec7de"
